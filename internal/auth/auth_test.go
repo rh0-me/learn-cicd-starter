@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"errors"
 	"net/http"
 	"testing"
 )
@@ -24,7 +25,7 @@ func TestGetAPIKey(t *testing.T) {
 				"Authorization": []string{"Bearer sometoken"},
 			},
 			wantKey:   "",
-			wantError: ErrNoAuthHeaderIncluded, // will actually be a generic error
+			wantError: errors.New("malformed authorization header"), // will actually be a generic error
 		},
 		{
 			name: "malformed Authorization header (no key)",
@@ -32,7 +33,7 @@ func TestGetAPIKey(t *testing.T) {
 				"Authorization": []string{"ApiKey"},
 			},
 			wantKey:   "",
-			wantError: nil, // also generic error
+			wantError: errors.New("malformed authorization header"), // also generic error
 		},
 		{
 			name: "valid Authorization header",
@@ -61,4 +62,3 @@ func TestGetAPIKey(t *testing.T) {
 		})
 	}
 }
-
